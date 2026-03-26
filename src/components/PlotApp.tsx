@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from 'react';
-import { UploadCloud, Download, Settings, FileText, ChevronRight, BarChart3, Info, Pipette } from 'lucide-react';
+import { UploadCloud, Download, Settings, FileText, ChevronRight, BarChart3, Info, Pipette, X } from 'lucide-react';
 import * as d3 from 'd3';
 import Papa from 'papaparse';
 import { toPng } from 'html-to-image';
@@ -169,11 +169,11 @@ export default function PlotApp() {
     if (params.showSeparator) marginBottom += 35;
     if (params.showDescription) marginBottom += 55;
 
-    const margin = { 
-      top: 10 + p, 
-      right: 620 + p, 
-      bottom: marginBottom + p, 
-      left: 320 + p 
+    const margin = {
+      top: 10 + p,
+      right: 620 + p,
+      bottom: marginBottom + p,
+      left: 320 + p
     };
     const innerWidth = width - margin.left - margin.right;
     const innerHeight = height - margin.top - margin.bottom;
@@ -527,7 +527,7 @@ export default function PlotApp() {
         .style('fill', params.titleColor)
         .style('font-weight', 'bold')
         .style('font-size', `${params.titleSize}px`);
-      
+
       currentFooterY += 40;
     }
 
@@ -540,7 +540,7 @@ export default function PlotApp() {
         .style('stroke', '#cbd5e1')
         .style('stroke-width', params.separatorSize)
         .style('stroke-dasharray', params.separatorStyle === 'solid' ? 'none' : (params.separatorStyle === 'dashed' ? '8,8' : '2,2'));
-      
+
       currentFooterY += 40;
     }
 
@@ -573,127 +573,127 @@ export default function PlotApp() {
     <div className="flex flex-col h-screen text-slate-100 p-4 gap-4 max-w-[1850px] mx-auto relative overflow-hidden">
       {activeStyleRow && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-           <div className="bg-slate-900 border border-slate-700 p-6 rounded-2xl shadow-2xl w-full max-w-md animate-in fade-in zoom-in duration-200">
-              <div className="flex justify-between items-center mb-6 border-b border-slate-800 pb-4">
-                 <div>
-                    <h3 className="text-lg font-bold text-slate-100">Customize Result Line</h3>
-                    <p className="text-xs text-slate-400 mt-1">{activeStyleRow[params.yAxisDataset]}</p>
-                 </div>
-                         <button onClick={() => setActiveStyleRow(null)} className="p-2 hover:bg-slate-800 rounded-lg text-slate-400">
-                           <X className="rotate-90" size={18} />
-                         </button>
+          <div className="bg-slate-900 border border-slate-700 p-6 rounded-2xl shadow-2xl w-full max-w-md animate-in fade-in zoom-in duration-200">
+            <div className="flex justify-between items-center mb-6 border-b border-slate-800 pb-4">
+              <div>
+                <h3 className="text-lg font-bold text-slate-100">Customize Result Line</h3>
+                <p className="text-xs text-slate-400 mt-1">{activeStyleRow[params.yAxisDataset]}</p>
+              </div>
+              <button onClick={() => setActiveStyleRow(null)} className="p-2 hover:bg-slate-800 rounded-lg text-slate-400">
+                <X className="rotate-90" size={18} />
+              </button>
+            </div>
+
+            <div className="space-y-6">
+              {/* Marker Styles */}
+              <div className="space-y-4">
+                <h4 className="text-[10px] uppercase tracking-widest text-slate-500 font-bold">Dot / Marker Styles</h4>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="bg-slate-800/40 p-3 rounded-xl border border-slate-800">
+                    <label className="text-xs text-slate-400 mb-2 block">Color</label>
+                    <input
+                      type="color"
+                      className="w-full h-8 rounded-lg cursor-pointer bg-transparent border-none"
+                      value={activeStyleRow.style?.markerColor || params.lineColor}
+                      onChange={(e) => {
+                        const newData = [...data!];
+                        const idx = data!.findIndex(d => d === activeStyleRow);
+                        newData[idx].style = { ...newData[idx].style, markerColor: e.target.value, customized: true };
+                        setData(newData);
+                      }}
+                    />
+                  </div>
+                  <div className="bg-slate-800/40 p-3 rounded-xl border border-slate-800">
+                    <label className="text-xs text-slate-400 mb-2 block">Size</label>
+                    <input
+                      type="number"
+                      className="w-full bg-slate-900 border border-slate-700 rounded p-1 text-sm outline-none focus:ring-1 focus:ring-blue-500"
+                      value={activeStyleRow.style?.markerSize || params.markerSize}
+                      onChange={(e) => {
+                        const newData = [...data!];
+                        const idx = data!.findIndex(d => d === activeStyleRow);
+                        newData[idx].style = { ...newData[idx].style, markerSize: parseInt(e.target.value), customized: true };
+                        setData(newData);
+                      }}
+                    />
+                  </div>
+                </div>
               </div>
 
-              <div className="space-y-6">
-                 {/* Marker Styles */}
-                 <div className="space-y-4">
-                    <h4 className="text-[10px] uppercase tracking-widest text-slate-500 font-bold">Dot / Marker Styles</h4>
-                    <div className="grid grid-cols-2 gap-4">
-                       <div className="bg-slate-800/40 p-3 rounded-xl border border-slate-800">
-                          <label className="text-xs text-slate-400 mb-2 block">Color</label>
-                          <input
-                            type="color"
-                            className="w-full h-8 rounded-lg cursor-pointer bg-transparent border-none"
-                            value={activeStyleRow.style?.markerColor || params.lineColor}
-                            onChange={(e) => {
-                               const newData = [...data!];
-                               const idx = data!.findIndex(d => d === activeStyleRow);
-                               newData[idx].style = { ...newData[idx].style, markerColor: e.target.value, customized: true };
-                               setData(newData);
-                            }}
-                          />
-                       </div>
-                       <div className="bg-slate-800/40 p-3 rounded-xl border border-slate-800">
-                          <label className="text-xs text-slate-400 mb-2 block">Size</label>
-                          <input
-                            type="number"
-                            className="w-full bg-slate-900 border border-slate-700 rounded p-1 text-sm outline-none focus:ring-1 focus:ring-blue-500"
-                            value={activeStyleRow.style?.markerSize || params.markerSize}
-                            onChange={(e) => {
-                               const newData = [...data!];
-                               const idx = data!.findIndex(d => d === activeStyleRow);
-                               newData[idx].style = { ...newData[idx].style, markerSize: parseInt(e.target.value), customized: true };
-                               setData(newData);
-                            }}
-                          />
-                       </div>
-                    </div>
-                 </div>
-
-                 {/* Label Styles */}
-                 <div className="space-y-4">
-                    <h4 className="text-[10px] uppercase tracking-widest text-slate-500 font-bold">Y-Axis Text Styles</h4>
-                    <div className="grid grid-cols-2 gap-4">
-                       <div className="bg-slate-800/40 p-3 rounded-xl border border-slate-800">
-                          <label className="text-xs text-slate-400 mb-2 block">Text Color</label>
-                          <input
-                            type="color"
-                            className="w-full h-8 rounded-lg cursor-pointer bg-transparent border-none"
-                            value={activeStyleRow.style?.labelColor || '#1e293b'}
-                            onChange={(e) => {
-                               const newData = [...data!];
-                               const idx = data!.findIndex(d => d === activeStyleRow);
-                               newData[idx].style = { ...newData[idx].style, labelColor: e.target.value, customized: true };
-                               setData(newData);
-                            }}
-                          />
-                       </div>
-                       <div className="bg-slate-800/40 p-3 rounded-xl border border-slate-800">
-                          <label className="text-xs text-slate-400 mb-2 block">Font Size</label>
-                          <input
-                            type="number"
-                            className="w-full bg-slate-900 border border-slate-700 rounded p-1 text-sm outline-none focus:ring-1 focus:ring-blue-500"
-                            value={activeStyleRow.style?.labelSize || 22}
-                            onChange={(e) => {
-                               const newData = [...data!];
-                               const idx = data!.findIndex(d => d === activeStyleRow);
-                               newData[idx].style = { ...newData[idx].style, labelSize: parseInt(e.target.value), customized: true };
-                               setData(newData);
-                            }}
-                          />
-                       </div>
-                    </div>
-                    <div className="flex gap-2">
-                       <button
-                         onClick={() => {
-                            const newData = [...data!];
-                            const idx = data!.findIndex(d => d === activeStyleRow);
-                            newData[idx].style = { ...newData[idx].style, bold: !newData[idx].style.bold, customized: true };
-                            setData(newData);
-                         }}
-                         className={`flex-1 py-2 rounded-xl text-xs font-bold transition-all ${activeStyleRow.style?.bold ? 'bg-blue-600 text-white' : 'bg-slate-800 text-slate-500 hover:bg-slate-700'}`}
-                       >B</button>
-                       <button
-                         onClick={() => {
-                            const newData = [...data!];
-                            const idx = data!.findIndex(d => d === activeStyleRow);
-                            newData[idx].style = { ...newData[idx].style, italic: !newData[idx].style.italic, customized: true };
-                            setData(newData);
-                         }}
-                         className={`flex-1 py-2 rounded-xl text-xs italic transition-all ${activeStyleRow.style?.italic ? 'bg-blue-600 text-white' : 'bg-slate-800 text-slate-500 hover:bg-slate-700'}`}
-                       >I</button>
-                       <button
-                         onClick={() => {
-                            const newData = [...data!];
-                            const idx = data!.findIndex(d => d === activeStyleRow);
-                            newData[idx].style = { ...newData[idx].style, underline: !newData[idx].style.underline, customized: true };
-                            setData(newData);
-                         }}
-                         className={`flex-1 py-2 rounded-xl text-xs underline transition-all ${activeStyleRow.style?.underline ? 'bg-blue-600 text-white' : 'bg-slate-800 text-slate-500 hover:bg-slate-700'}`}
-                       >U</button>
-                    </div>
-                 </div>
+              {/* Label Styles */}
+              <div className="space-y-4">
+                <h4 className="text-[10px] uppercase tracking-widest text-slate-500 font-bold">Y-Axis Text Styles</h4>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="bg-slate-800/40 p-3 rounded-xl border border-slate-800">
+                    <label className="text-xs text-slate-400 mb-2 block">Text Color</label>
+                    <input
+                      type="color"
+                      className="w-full h-8 rounded-lg cursor-pointer bg-transparent border-none"
+                      value={activeStyleRow.style?.labelColor || '#1e293b'}
+                      onChange={(e) => {
+                        const newData = [...data!];
+                        const idx = data!.findIndex(d => d === activeStyleRow);
+                        newData[idx].style = { ...newData[idx].style, labelColor: e.target.value, customized: true };
+                        setData(newData);
+                      }}
+                    />
+                  </div>
+                  <div className="bg-slate-800/40 p-3 rounded-xl border border-slate-800">
+                    <label className="text-xs text-slate-400 mb-2 block">Font Size</label>
+                    <input
+                      type="number"
+                      className="w-full bg-slate-900 border border-slate-700 rounded p-1 text-sm outline-none focus:ring-1 focus:ring-blue-500"
+                      value={activeStyleRow.style?.labelSize || 22}
+                      onChange={(e) => {
+                        const newData = [...data!];
+                        const idx = data!.findIndex(d => d === activeStyleRow);
+                        newData[idx].style = { ...newData[idx].style, labelSize: parseInt(e.target.value), customized: true };
+                        setData(newData);
+                      }}
+                    />
+                  </div>
+                </div>
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => {
+                      const newData = [...data!];
+                      const idx = data!.findIndex(d => d === activeStyleRow);
+                      newData[idx].style = { ...newData[idx].style, bold: !newData[idx].style.bold, customized: true };
+                      setData(newData);
+                    }}
+                    className={`flex-1 py-2 rounded-xl text-xs font-bold transition-all ${activeStyleRow.style?.bold ? 'bg-blue-600 text-white' : 'bg-slate-800 text-slate-500 hover:bg-slate-700'}`}
+                  >B</button>
+                  <button
+                    onClick={() => {
+                      const newData = [...data!];
+                      const idx = data!.findIndex(d => d === activeStyleRow);
+                      newData[idx].style = { ...newData[idx].style, italic: !newData[idx].style.italic, customized: true };
+                      setData(newData);
+                    }}
+                    className={`flex-1 py-2 rounded-xl text-xs italic transition-all ${activeStyleRow.style?.italic ? 'bg-blue-600 text-white' : 'bg-slate-800 text-slate-500 hover:bg-slate-700'}`}
+                  >I</button>
+                  <button
+                    onClick={() => {
+                      const newData = [...data!];
+                      const idx = data!.findIndex(d => d === activeStyleRow);
+                      newData[idx].style = { ...newData[idx].style, underline: !newData[idx].style.underline, customized: true };
+                      setData(newData);
+                    }}
+                    className={`flex-1 py-2 rounded-xl text-xs underline transition-all ${activeStyleRow.style?.underline ? 'bg-blue-600 text-white' : 'bg-slate-800 text-slate-500 hover:bg-slate-700'}`}
+                  >U</button>
+                </div>
               </div>
+            </div>
 
-              <div className="mt-8">
-                 <button
-                   onClick={() => setActiveStyleRow(null)}
-                   className="w-full bg-blue-600 hover:bg-blue-500 py-3 rounded-xl font-bold text-sm transition-all shadow-lg shadow-blue-900/40"
-                 >
-                   Apply & Save
-                 </button>
-              </div>
-           </div>
+            <div className="mt-8">
+              <button
+                onClick={() => setActiveStyleRow(null)}
+                className="w-full bg-blue-600 hover:bg-blue-500 py-3 rounded-xl font-bold text-sm transition-all shadow-lg shadow-blue-900/40"
+              >
+                Apply & Save
+              </button>
+            </div>
+          </div>
         </div>
       )}
       <div
@@ -778,20 +778,20 @@ export default function PlotApp() {
                             <input type="color" value={params.groupLabelColor} onChange={(e) => setParams({ ...params, groupLabelColor: e.target.value })} className="w-5 h-5 rounded cursor-pointer" />
                             <input type="number" value={params.groupLabelSize} onChange={(e) => setParams({ ...params, groupLabelSize: parseInt(e.target.value) })} className="w-10 bg-slate-800 border border-slate-600 rounded p-1 text-[10px]" />
                           </div>
-                            <div className="flex items-center gap-1.5 border-l border-slate-700 pl-2">
-                              <button 
-                                onClick={() => setParams({ ...params, groupLabelBold: !params.groupLabelBold })} 
-                                className={`p-1 rounded text-[10px] w-6 transition-colors font-bold ${params.groupLabelBold ? 'bg-blue-600 text-white' : 'bg-slate-800 text-slate-500 hover:text-slate-400'}`}
-                              >B</button>
-                              <button 
-                                onClick={() => setParams({ ...params, groupLabelItalic: !params.groupLabelItalic })} 
-                                className={`p-1 rounded text-[10px] w-6 italic transition-colors ${params.groupLabelItalic ? 'bg-blue-600 text-white' : 'bg-slate-800 text-slate-500 hover:text-slate-400'}`}
-                              >I</button>
-                              <button 
-                                onClick={() => setParams({ ...params, groupLabelUnderline: !params.groupLabelUnderline })} 
-                                className={`p-1 rounded text-[10px] w-6 underline transition-colors ${params.groupLabelUnderline ? 'bg-blue-600 text-white' : 'bg-slate-800 text-slate-500 hover:text-slate-400'}`}
-                              >U</button>
-                            </div>
+                          <div className="flex items-center gap-1.5 border-l border-slate-700 pl-2">
+                            <button
+                              onClick={() => setParams({ ...params, groupLabelBold: !params.groupLabelBold })}
+                              className={`p-1 rounded text-[10px] w-6 transition-colors font-bold ${params.groupLabelBold ? 'bg-blue-600 text-white' : 'bg-slate-800 text-slate-500 hover:text-slate-400'}`}
+                            >B</button>
+                            <button
+                              onClick={() => setParams({ ...params, groupLabelItalic: !params.groupLabelItalic })}
+                              className={`p-1 rounded text-[10px] w-6 italic transition-colors ${params.groupLabelItalic ? 'bg-blue-600 text-white' : 'bg-slate-800 text-slate-500 hover:text-slate-400'}`}
+                            >I</button>
+                            <button
+                              onClick={() => setParams({ ...params, groupLabelUnderline: !params.groupLabelUnderline })}
+                              className={`p-1 rounded text-[10px] w-6 underline transition-colors ${params.groupLabelUnderline ? 'bg-blue-600 text-white' : 'bg-slate-800 text-slate-500 hover:text-slate-400'}`}
+                            >U</button>
+                          </div>
                         </div>
                       )}
 
@@ -925,19 +925,19 @@ export default function PlotApp() {
                 </div>
 
                 <div>
-                   <label className="text-xs text-slate-500 mb-1 block flex items-center justify-between">
-                     Canvas Padding
-                     <span className="text-blue-400 font-bold">{params.canvasPadding}px</span>
-                   </label>
-                   <input
-                      type="range"
-                      min="0"
-                      max="100"
-                      step="2"
-                      value={params.canvasPadding}
-                      onChange={(e) => setParams({ ...params, canvasPadding: parseInt(e.target.value) })}
-                      className="w-full h-1.5 bg-slate-900 rounded-lg appearance-none cursor-pointer accent-blue-500 border border-slate-700"
-                   />
+                  <label className="text-xs text-slate-500 mb-1 block flex items-center justify-between">
+                    Canvas Padding
+                    <span className="text-blue-400 font-bold">{params.canvasPadding}px</span>
+                  </label>
+                  <input
+                    type="range"
+                    min="0"
+                    max="100"
+                    step="2"
+                    value={params.canvasPadding}
+                    onChange={(e) => setParams({ ...params, canvasPadding: parseInt(e.target.value) })}
+                    className="w-full h-1.5 bg-slate-900 rounded-lg appearance-none cursor-pointer accent-blue-500 border border-slate-700"
+                  />
                 </div>
 
                 <div>
@@ -1141,33 +1141,33 @@ export default function PlotApp() {
                   const isDuplicate = (data || []).filter(r => String(r[params.yAxisDataset]) === yVal).length > 1;
 
                   return (
-                    <tr 
-                      key={i} 
+                    <tr
+                      key={i}
                       className={`hover:bg-slate-700/30 transition-colors group cursor-grab active:cursor-grabbing ${isDuplicate ? 'bg-amber-500/5' : ''} ${draggedIdx === i ? 'opacity-30' : ''}`}
                       draggable="true"
                       onDragStart={() => setDraggedIdx(i)}
                       onDragOver={(e) => e.preventDefault()}
                       onDrop={(e) => {
-                         e.preventDefault();
-                         if (draggedIdx === null || draggedIdx === i) return;
-                         const newData = [...data!];
-                         const targetIdx = data!.indexOf(row);
-                         const sourceRow = tableData[draggedIdx];
-                         const sourceIdx = data!.indexOf(sourceRow);
-                         
-                         const movedItem = newData.splice(sourceIdx, 1)[0];
-                         // Adjust target index if necessary
-                         const finalTarget = newData.indexOf(row);
-                         newData.splice(finalTarget + (draggedIdx < i ? 1 : 0), 0, movedItem);
-                         
-                         setData(newData);
-                         setDraggedIdx(null);
+                        e.preventDefault();
+                        if (draggedIdx === null || draggedIdx === i) return;
+                        const newData = [...data!];
+                        const targetIdx = data!.indexOf(row);
+                        const sourceRow = tableData[draggedIdx];
+                        const sourceIdx = data!.indexOf(sourceRow);
+
+                        const movedItem = newData.splice(sourceIdx, 1)[0];
+                        // Adjust target index if necessary
+                        const finalTarget = newData.indexOf(row);
+                        newData.splice(finalTarget + (draggedIdx < i ? 1 : 0), 0, movedItem);
+
+                        setData(newData);
+                        setDraggedIdx(null);
                       }}
                       onDragEnd={() => setDraggedIdx(null)}
                     >
                       <td className="p-3 text-center border-r border-slate-700/30 bg-slate-900/10">
                         <div className="flex justify-center text-slate-600 group-hover:text-blue-400 transition-colors">
-                           <ChevronRight size={16} className="-rotate-90" />
+                          <ChevronRight size={16} className="-rotate-90" />
                         </div>
                       </td>
                       <td className="p-3 text-center border-r border-slate-700/30">
